@@ -1,32 +1,29 @@
-import React from 'react';
-import usePatientsList from './usePatientsList';
-import useAddPatient from './UseAddPatient';
-import PatientForm from './Pages/PatientForm';
+const usePatientsController = async (patientData) => {
+  try {
+      const response = await fetch("http://api-ecf.sarahkatz.fr/patients", {
+          method: "POST",
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: patientData
+          
+      });
+console.log(patientData);
+      if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
 
-const UsePatientsController = () => {
-  const { patients, isLoading: isFetchingPatients, error: patientsError } = usePatientsList();
-  const { isLoading: isAddingPatient, error: addPatientError, handleAddPatient } = useAddPatient();
+          console.log("erreur http");
+      }
+      console.log("PRELECTURE");
+      const data = await response.json();
+      console.log("lecture data");
+      return data;
 
-  return (
-    <div className="patientsController">
-      <h2>Liste des patients</h2>
-      {isFetchingPatients ? (
-        <div>Chargement...</div>
-      ) : patientsError ? (
-        <div>Erreur : {patientsError}</div>
-      ) : (
-        <ul>
-          {patients.map((patient, index) => (
-            <li key={index}>{patient.name}</li>
-          ))}
-        </ul>
-      )}
-      <h2>Ajouter un patient</h2>
-      <PatientForm onAddPatient={handleAddPatient} />
-      {isAddingPatient && <div>Ajout du patient en cours...</div>}
-      {addPatientError && <div>Erreur lors de l'ajout du patient : {addPatientError}</div>}
-    </div>
-  );
+  } catch (error) {
+      console.error("Échec de l'ajout du nouveau patient", error);
+      console.log("catch erreur");
+      throw error;
+  }
 };
 
-export default UsePatientsController;
+export default usePatientsController;
