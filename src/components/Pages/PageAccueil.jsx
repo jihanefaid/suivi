@@ -1,122 +1,119 @@
-// PageAccueil.jsx
-import React, { useState } from "react";
-import { Form, Button } from "react-bootstrap";
-import Navbarsuivi from "../Navbarsuivi";
+import React, { useState } from 'react';
+import usePatientsController from '../usePatientsController';
 
 const PageAccueil = () => {
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lasttName: "",
-    birthdate: "",
-    socialSecurityNumber: "",
-    createdAt: "",
-    modifiedAt: "",
-  });
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.firstName]: e.target.value });
-  };
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [birthdate, setBirthdate] = useState("");
+  const [socialSecurityNumber, setSocialSecurityNumber] = useState("");
+  const [createdAt, setDateCreation] = useState("");
+  const [modifiedAt, setDateModification] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const response = await fetch("http://api-ecf.sarahkatz.fr/patients", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-        console.log(FormData);
-      if (!response.ok) {
-        throw new Error("Erreur HTTP");
-      }
 
-      console.log("Données envoyées avec succès !");
-      
-      
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const newPatient = {
+        lastName,
+        firstName,
+        birthdate,
+        socialSecurityNumber,
+        createdAt,
+        modifiedAt
+      };
+      // Appel à une fonction pour traiter les nouveaux patients
+      // Remplacez `usePatientsController` par la fonction que vous utilisez
+
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      await usePatientsController(newPatient);
+
+      // Réinitialisation des champs du formulaire après soumission réussie
+      setLastName("");
+      setFirstName("");
+      setBirthdate("");
+      setSocialSecurityNumber("");
+      setDateCreation("");
+      setDateModification("");
     } catch (error) {
-      console.error("Erreur lors de l'envoi des données :", error.message);
+      setError(error);
+    } finally {
+      setIsLoading(false);
     }
   };
+
   return (
-    <div>
-      <Navbarsuivi />
-      <h1> Page d'accueil </h1>
-      <h2>Ajouter un nouveau patient</h2>
-      <Form onSubmit={handleSubmit}>
-        <Form.Group controlId="formName">
-          <Form.Label>Nom :</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Entrez votre nom"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-          />
-        </Form.Group>
-        <br />
-        <Form.Group controlId="formPrenom">
-          <Form.Label>Prénom :</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Entrez votre Prénom"
-            name="prenom"
-            value={formData.prenom}
-            onChange={handleChange}
-          />
-        </Form.Group>
-        <br />
-        <Form.Group controlId="formBirthdate">
-          <Form.Label>Date de naissance :</Form.Label>
-          <Form.Control
-            type="date"
-            placeholder="Entrez votre date de naissance"
-            name="datedenaissance"
-            value={formData.datedenaissance}
-            onChange={handleChange}
-          />
-        </Form.Group>
-        <br />
-        <Form.Group controlId="formSocialSecurity">
-          <Form.Label>Numéro de sécurité :</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Entrez votre numéro de sécurité"
-            name="SocialSecurity"
-            value={formData.numerodesécurité}
-            onChange={handleChange}
-          />
-        </Form.Group>
-        <br />
-        <Form.Group controlId="formDateCreation">
-          <Form.Label>Date de création : </Form.Label>
-          <Form.Control
-            type="date"
-            placeholder="Entrez votre date de création"
-            name="datedecreation"
-            value={formData.datedecreation}
-            onChange={handleChange}
-          />
-        </Form.Group>
-        <br />
-        <Form.Group controlId="formDateModification">
-          <Form.Label>Date de modification : </Form.Label>
-          <Form.Control
-            type="date"
-            placeholder="Entrez votre date de modification"
-            name="datedemodification"
-            value={formData.datedemodification}
-            onChange={handleChange}
-          />
-        </Form.Group>
-        <br />
-        {/* Ajoutez d'autres champs de formulaire ici */}
-        <Button variant="primary" type="submit">
-          Ajouter
-        </Button>
-      </Form>
-    </div>
+    <form onSubmit={handleSubmit}>
+      <div className="mb-3">
+        <label htmlFor="lastName" className="form-label">Nom :</label>
+        <input
+          type="text"
+          className="form-control"
+          id="lastName"
+          placeholder="Entrez votre nom"
+          value={lastName}
+          onChange={(e) => setLastName(e.target.value)}
+        />
+      </div>
+      <div className="mb-3">
+        <label htmlFor="firstName" className="form-label">Prénom :</label>
+        <input
+          type="text"
+          className="form-control"
+          id="firstName"
+          placeholder="Entrez votre Prénom"
+          value={firstName}
+          onChange={(e) => setFirstName(e.target.value)}
+        />
+      </div>
+      <div className="mb-3">
+        <label htmlFor="birthdate" className="form-label">Date de naissance :</label>
+        <input
+          type="date"
+          className="form-control"
+          id="birthdate"
+          value={birthdate}
+          onChange={(e) => setBirthdate(e.target.value)}
+        />
+      </div>
+      <div className="mb-3">
+        <label htmlFor="socialSecurityNumber" className="form-label">Numéro de sécurité :</label>
+        <input
+          type="text"
+          className="form-control"
+          id="socialSecurityNumber"
+          placeholder="Entrez votre numéro de sécurité"
+          value={socialSecurityNumber}
+          onChange={(e) => setSocialSecurityNumber(e.target.value)}
+        />
+      </div>
+      <div className="mb-3">
+        <label htmlFor="dateCreation" className="form-label">Date de création :</label>
+        <input
+          type="date"
+          className="form-control"
+          id="dateCreation"
+          value={createdAt}
+          onChange={(e) => setDateCreation(e.target.value)}
+        />
+      </div>
+      <div className="mb-3">
+        <label htmlFor="dateModification" className="form-label">Date de modification :</label>
+        <input
+          type="date"
+          className="form-control"
+          id="dateModification"
+          value={modifiedAt}
+          onChange={(e) => setDateModification(e.target.value)}
+        />
+      </div>
+      {/* Ajoutez d'autres champs de formulaire ici */}
+      <button type="submit" className="btn btn-primary">Ajouter</button>
+    </form>
   );
 };
 
