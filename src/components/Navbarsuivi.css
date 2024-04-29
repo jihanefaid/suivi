@@ -1,0 +1,107 @@
+/* Styles CSS pour votre Navbar */
+.custom-bg-color {
+  background-color: #4c1ada;
+}
+.formName {
+  margin-right: 20px;
+  color: #4e54d6;
+  margin-left: 15px;
+  text-align: left; /* Aligne le texte à gauche */
+  align-items: flex-start; /* Aligne verticalement le texte à gauche */
+  margin-bottom: 10px;
+}
+
+.formPrenom {
+  margin-right: 20px;
+  color: #4e54d6;
+  margin-left: 15px;
+  text-align: left; /* Aligne le texte à gauche */
+  align-items: flex-start; /* Aligne verticalement le texte à gauche */
+  margin-bottom: 10px;
+}
+
+.formDatedeNaissance {
+  color: #4e54d6;
+  margin-left: 15px;
+  margin-right: 20px;
+  text-align: left; /* Aligne le texte à gauche */
+  align-items: flex-start; /* Aligne verticalement le texte à gauche */
+  margin-bottom: 10px;
+}
+
+.formNumsécurité {
+  color: #4e54d6;
+  margin-left: 15px;
+  margin-right: 20px;
+  text-align: left; /* Aligne le texte à gauche */
+  align-items: flex-start; /* Aligne verticalement le texte à gauche */
+  margin-bottom: 10px;
+}
+
+.formDatecréation {
+  color: #4e54d6;
+  margin-left: 15px;
+  margin-right: 20px;
+  text-align: left; /* Aligne le texte à gauche */
+  align-items: flex-start; /* Aligne verticalement le texte à gauche */
+  margin-bottom: 10px;
+}
+
+.formDatemodification {
+  color: #4e54d6;
+  margin-left: 15px;
+  margin-right: 20px;
+  text-align: left; /* Aligne le texte à gauche */
+  align-items: flex-start; /* Aligne verticalement le texte à gauche */
+  margin-bottom: 10px;
+}
+
+.accueil {
+  font-size: 35px; /* Change la taille du texte */
+  color: rgb(23, 22, 22); /* Change la couleur du texte */
+
+  text-decoration: underline; /* Souligne le texte */
+  font-style: inherit; /* Change le style de l'écriture */
+  font-weight: bold; /* Met le texte en gras */
+  text-align: left;
+  margin-left: 15px;
+  margin-top: auto;
+}
+
+.subTitle {
+  font-size: 25px; /* Change la taille du texte */
+  color: rgb(23, 22, 22); /* Change la couleur du texte */
+  font-style: normal;
+  text-align: left;
+  margin-left: 15px;
+  margin-top: auto;
+}
+.Liste {
+  margin-top: auto;
+  font-size: 35px; /* Change la taille du texte */
+  color: rgb(23, 22, 22); /* Change la couleur du texte */
+
+  text-decoration: underline; /* Souligne le texte */
+  font-style: inherit; /* Change le style de l'écriture */
+  font-weight: bold; /* Met le texte en gras */
+  text-align: left;
+  margin-left: 15px;
+}
+.button1 {
+  text-align: left;
+  margin-left: 15px;
+  color: rgb(167, 63, 63);
+}
+.formButton {
+  margin-left: 15px;
+  /* Aligne le texte horizontalement au centre */
+}
+
+.formButton2 {
+  margin-left: 15px;
+  /* Aligne le texte horizontalement au centre */
+}
+
+.ButoonSupp{
+  margin-left: 15px;
+}
