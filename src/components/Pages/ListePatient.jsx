@@ -1,13 +1,13 @@
 import React from "react";
-import Navbarsuivi from "../Navbarsuivi"; // Assurez-vous que le chemin vers Navbarsuivi est correct
-import { Button, Table } from "react-bootstrap";
-
+import Navbarsuivi from "../Navbarsuivi";
+import { Button, Container, Table} from "react-bootstrap";
+import {Routes, Route, useNavigate} from 'react-router-dom';
 class ListePatient extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      patients: [], // Initialiser le state avec un tableau vide pour stocker les données récupérées
-      patientSelectionne: null // Initialiser le patient sélectionné à null
+      patients: [],
+      patientSelectionne: null
     };
   }
 
@@ -15,36 +15,70 @@ class ListePatient extends React.Component {
     fetch("https://api-ecf.sarahkatz.fr/patients")
       .then((response) => response.json())
       .then((data) => {
-        console.log("Données récupérées :", data); // Afficher les données récupérées dans la console
-        this.setState({ patients: data }); // Mettre à jour le state avec les données récupérées
+        console.log("Données récupérées :", data);
+        this.setState({ patients: data });
       })
       .catch((error) =>
         console.error("Erreur lors de la récupération des données :", error)
       );
   }
 
+  supprimerPatientParId = async (patientId) => {
+    console.log(patientId)
+    try {
+      const response = await fetch(`https://api-ecf.sarahkatz.fr/patients/${patientId}`, {
+        method: "DELETE"
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      // Mettre à jour l'état pour supprimer le patient supprimé
+      this.setState((prevState) => ({
+        patients: prevState.patients.filter((patient) => patient.id !== patientId),
+        patientSelectionne: null // Réinitialiser le patient sélectionné après la suppression
+      }));
+      
+      console.log("Patient supprimé avec succès :", patientId);
+    } catch (error) {
+      console.error("Erreur lors de la suppression du patient :", error);
+    }
+  };
+
+  modifierPatientParId = (patientId) => {
+    // Redirigez l'utilisateur vers la page ModifierPatient en utilisant le router
+    this.props.history.push(`/modifier/${patientId}`);
+  };
+  
+
   handleSupprimerPatient = () => {
-    // Implémentez la logique pour supprimer le patient sélectionné
-    if (this.state.patientSelectionne) {
-      console.log("Patient à supprimer :", this.state.patientSelectionne);
-      // Mettez en œuvre la logique pour supprimer le patient
+    const { patientSelectionne } = this.state;
+    if (patientSelectionne) {
+      console.log("Patient à supprimer :", patientSelectionne);
+      this.supprimerPatientParId(patientSelectionne.id); // Appeler la fonction pour supprimer le patient par son ID
     }
   };
 
   handleModifierPatient = () => {
-    // Implémentez la logique pour modifier le patient sélectionné
     if (this.state.patientSelectionne) {
       console.log("Patient à modifier :", this.state.patientSelectionne);
-      // Mettez en œuvre la logique pour modifier le patient
     }
-  };
+   };
 
+
+   const navigate = useNavigate();
+
+   const navigateToModifierPatient = () => {
+     navigate('/modifier');
+   };
+   
   render() {
-    console.log("État initial des patients :", this.state.patients); // Vérifier l'état initial des patients
+    console.log("État initial des patients :", this.state.patients);
     return (
       <>
         <Navbarsuivi />
-        <div>
+        <Container>
           <h2 className="Liste">Liste des patients</h2>
           <Table striped bordered hover>
             <thead>
@@ -53,37 +87,31 @@ class ListePatient extends React.Component {
                 <th>Nom</th>
                 <th>Date de naissance</th>
                 <th>Numéro de sécurité sociale</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
               {this.state.patients.map((patient) => (
-                <tr
-                  key={patient.id}
-                  onClick={() => this.setState({ patientSelectionne: patient })}
-                >
+                <tr key={patient.id}>
                   <td>{patient.firstName}</td>
                   <td>{patient.lastName}</td>
                   <td>{patient.birthdate}</td>
                   <td>{patient.socialSecurityNumber}</td>
+                  <td>
+                    <Button variant="danger" onClick={() => this.supprimerPatientParId(patient.idPatient)}>
+                      Supprimer
+                    </Button>
+                   
+                    <button onClick={navigateToModifierPatient={}}>Modifier</button>
+      <Routes>
+      <Route path="/modifier" element={<modifier/>} />
+      </Routes>           
+                  </td>
                 </tr>
               ))}
             </tbody>
           </Table>
-          <br />
-        </div>
-        <div className="formButton">
-          <Button variant="danger" onClick={this.handleSupprimerPatient}>
-            Supprimer
-          </Button>
-        </div>
-
-        <br />
-
-        <div className="formButton2">
-          <Button variant="primary" onClick={this.handleModifierPatient}>
-            Modifier
-          </Button>
-        </div>
+        </Container>
       </>
     );
   }
