@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import usePatientsController from '../usePatientsController';
+import Navbarsuivi from '../Navbarsuivi';
+import {Routes, Route, useNavigate} from 'react-router-dom';
+
 
 const PageAccueil = () => {
   const [firstName, setFirstName] = useState("");
@@ -46,8 +49,20 @@ const PageAccueil = () => {
     }
   };
 
+
+  const navigate = useNavigate();
+
+  const navigateToListepatients = () => {
+    // 👇️ Navigate to /contacts
+    navigate('/patients');
+  };
+
+<br />
   return (
+    
     <form onSubmit={handleSubmit}>
+      <Navbarsuivi />
+      <h2 className="Liste">Ajouter un patient</h2>
       <div className="mb-3">
         <label htmlFor="lastName" className="form-label">Nom :</label>
         <input
@@ -59,6 +74,7 @@ const PageAccueil = () => {
           onChange={(e) => setLastName(e.target.value)}
         />
       </div>
+      <br />
       <div className="mb-3">
         <label htmlFor="firstName" className="form-label">Prénom :</label>
         <input
@@ -70,6 +86,7 @@ const PageAccueil = () => {
           onChange={(e) => setFirstName(e.target.value)}
         />
       </div>
+      <br />
       <div className="mb-3">
         <label htmlFor="birthdate" className="form-label">Date de naissance :</label>
         <input
@@ -80,6 +97,7 @@ const PageAccueil = () => {
           onChange={(e) => setBirthdate(e.target.value)}
         />
       </div>
+      <br />
       <div className="mb-3">
         <label htmlFor="socialSecurityNumber" className="form-label">Numéro de sécurité :</label>
         <input
@@ -91,6 +109,7 @@ const PageAccueil = () => {
           onChange={(e) => setSocialSecurityNumber(e.target.value)}
         />
       </div>
+      <br />
       <div className="mb-3">
         <label htmlFor="dateCreation" className="form-label">Date de création :</label>
         <input
@@ -101,6 +120,7 @@ const PageAccueil = () => {
           onChange={(e) => setDateCreation(e.target.value)}
         />
       </div>
+      <br />
       <div className="mb-3">
         <label htmlFor="dateModification" className="form-label">Date de modification :</label>
         <input
@@ -111,8 +131,13 @@ const PageAccueil = () => {
           onChange={(e) => setDateModification(e.target.value)}
         />
       </div>
+      <br />
       {/* Ajoutez d'autres champs de formulaire ici */}
-      <button type="submit" className="btn btn-primary">Ajouter</button>
+      <button onClick={navigateToListepatients}>Ajouter</button>
+      <Routes>
+      <Route path="/patients" element={<patients/>} />
+      
+        </Routes>
     </form>
   );
 };
