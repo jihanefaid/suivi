@@ -1,75 +1,133 @@
-import React from "react";
-// eslint-disable-next-line no-unused-vars
-import { Button, Table } from "react-bootstrap";
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
+import usePatientsController from '../usePatientsController';
+import Navbarsuivi from '../Navbarsuivi';
 
-class ListePatient extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      patients: [], // Initialiser le state avec un tableau vide pour stocker les données récupérées
-      patientSelectionne: null // Initialiser le patient sélectionné à null
-    };
-  }
+const PageAccueil = () => {
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [birthdate, setBirthdate] = useState("");
+  const [socialSecurityNumber, setSocialSecurityNumber] = useState("");
+  const [createdAt, setDateCreation] = useState("");
+  const [modifiedAt, setDateModification] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  componentDidMount() {
-    fetch("https://api-ecf.sarahkatz.fr/patients")
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Données récupérées :", data); // Afficher les données récupérées dans la console
-        this.setState({ patients: data }); // Mettre à jour le state avec les données récupérées
-      })
-      .catch((error) =>
-        console.error("Erreur lors de la récupération des données :", error)
-      );
-  }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  handleSupprimerPatient = () => {
-    const { patientSelectionne, patients } = this.state;
-    if (patientSelectionne) {
-      console.log("Patient à supprimer :", patientSelectionne);
-      // Mettez en œuvre la logique pour supprimer le patient
-      const nouveauxPatients = patients.filter(patient => patient.id !== patientSelectionne.id);
-      this.setState({ patients: nouveauxPatients, patientSelectionne: null });
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const newPatient = {
+        lastName,
+        firstName,
+        birthdate,
+        socialSecurityNumber,
+        createdAt,
+        modifiedAt
+      };
+      // Appel à une fonction pour traiter les nouveaux patients
+      // Remplacez `usePatientsController` par la fonction que vous utilisez
+
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      await usePatientsController(newPatient);
+
+      // Réinitialisation des champs du formulaire après soumission réussie
+      setLastName("");
+      setFirstName("");
+      setBirthdate("");
+      setSocialSecurityNumber("");
+      setDateCreation("");
+      setDateModification("");
+    } catch (error) {
+      setError(error);
+    } finally {
+      setIsLoading(false);
     }
   };
-  
-  handleModifierPatient = () => {
-    const { patientSelectionne } = this.state;
-    if (patientSelectionne) {
-      console.log("Patient à modifier :", patientSelectionne);
-      // Mettez en œuvre la logique pour modifier le patient
-    }
-  };
-  
-  render() {
-    // Afficher les boutons de suppression et de modification avec la gestion des événements de clic
-    return (
-      <>
-        ...
-        <div className="formButton">
-          <Button
-            variant="danger"
-            onClick={this.handleSupprimerPatient}
-            disabled={!this.state.patientSelectionne}
-          >
-            Supprimer
-          </Button>
-        </div>
-        <br />
-        <div className="formButton2">
-          <Button
-            variant="primary"
-            onClick={this.handleModifierPatient}
-            disabled={!this.state.patientSelectionne}
-          >
-            Modifier
-          </Button>
-        </div>
-        ...
-      </>
-    );
-  }
-  
-}
 
-export default ListePatient;
+<br />
+  return (
+    
+    <form onSubmit={handleSubmit}>
+      <Navbarsuivi />
+      <h2 className="Liste">Modifier un patient</h2>
+      <div className="mb-3">
+        <label htmlFor="lastName" className="form-label">Nom :</label>
+        <input
+          type="text"
+          className="form-control"
+          id="lastName"
+          placeholder="Entrez votre nom"
+          value={lastName}
+          onChange={(e) => setLastName(e.target.value)}
+        />
+      </div>
+      <br />
+      <div className="mb-3">
+        <label htmlFor="firstName" className="form-label">Prénom :</label>
+        <input
+          type="text"
+          className="form-control"
+          id="firstName"
+          placeholder="Entrez votre Prénom"
+          value={firstName}
+          onChange={(e) => setFirstName(e.target.value)}
+        />
+      </div>
+      <br />
+      <div className="mb-3">
+        <label htmlFor="birthdate" className="form-label">Date de naissance :</label>
+        <input
+          type="date"
+          className="form-control"
+          id="birthdate"
+          value={birthdate}
+          onChange={(e) => setBirthdate(e.target.value)}
+        />
+      </div>
+      <br />
+      <div className="mb-3">
+        <label htmlFor="socialSecurityNumber" className="form-label">Numéro de sécurité :</label>
+        <input
+          type="text"
+          className="form-control"
+          id="socialSecurityNumber"
+          placeholder="Entrez votre numéro de sécurité"
+          value={socialSecurityNumber}
+          onChange={(e) => setSocialSecurityNumber(e.target.value)}
+        />
+      </div>
+      <br />
+      <div className="mb-3">
+        <label htmlFor="dateCreation" className="form-label">Date de création :</label>
+        <input
+          type="date"
+          className="form-control"
+          id="dateCreation"
+          value={createdAt}
+          onChange={(e) => setDateCreation(e.target.value)}
+        />
+      </div>
+      <br />
+      <div className="mb-3">
+        <label htmlFor="dateModification" className="form-label">Date de modification :</label>
+        <input
+          type="date"
+          className="form-control"
+          id="dateModification"
+          value={modifiedAt}
+          onChange={(e) => setDateModification(e.target.value)}
+        />
+      </div>
+      <br />
+      {/* Ajoutez d'autres champs de formulaire ici */}
+      <button type="submit" className="btn btn-primary">Enregistrer</button>
+      
+    </form>
+  );
+};
+
+export default PageAccueil;
